@@ -11,22 +11,11 @@ using TestApp1.Data;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<TenantService>();
 
-// Add services to the container.
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
-//{
-//    options.UseSqlServer(connectionString);
-//});
 
-//builder.Services.AddDbContext<MyContext>(options =>
-//{
-
-//});
 builder.Services.AddDbContextFactory<ApplicationDbContext>((sp, opts) =>
 {
     var tenantProvider = sp.GetRequiredService<TenantService>();
     opts.UseSqlServer($"Server=(localdb)\\mssqllocaldb;Database=aspnet-{tenantProvider.GetTenant()};Trusted_Connection=True;MultipleActiveResultSets=true");
-    //opts.UseSqlServer($"Data Source={tenantProvider.GetTenant()}.sqlite");
 }, ServiceLifetime.Transient);
 
 
