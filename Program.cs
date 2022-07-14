@@ -25,7 +25,7 @@ builder.Services.AddSingleton<TenantService>();
 builder.Services.AddDbContextFactory<ApplicationDbContext>((sp, opts) =>
 {
     var tenantProvider = sp.GetRequiredService<TenantService>();
-    opts.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=aspnet-OrjuwanApp1-{tenantProvider.GetTenant()};Trusted_Connection=True;MultipleActiveResultSets=true");
+    opts.UseSqlServer($"Server=(localdb)\\mssqllocaldb;Database=aspnet-{tenantProvider.GetTenant()};Trusted_Connection=True;MultipleActiveResultSets=true");
     //opts.UseSqlServer($"Data Source={tenantProvider.GetTenant()}.sqlite");
 }, ServiceLifetime.Transient);
 
