@@ -2,27 +2,36 @@
 @using TestApp1.Data
 @using TestApp1.Shared
 @inject TenantService Tenants
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@inject SignInManager<IdentityUser> SignInManager
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+ <AuthorizeView>
+    <Authorized>
+       <h1>Hello, You are at @Tenants.GetTenant() tenant site</h1>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Hello, You are at @Tenants.GetTenant() tenant site</h1>
 
+       <p>Choose Your Corporation (Tenant)
+            <select id="Tenant" name="Tenant" onchange=@SetTenant>
+                @foreach(var tenant in Tenants.GetTenants())
+                {
+                      <option value=@tenant>@tenant</option>
+                }
+            </select>
+        </p>
+    </NotAuthorized>
+</AuthorizeView>
 
-<p>Choose Your Corporation (Tenant)
+@code {
 
-<select id="Tenant" name="Tenant" onchange=@SetTenant>
-
-@foreach(var tenant in Tenants.GetTenants())
-{
-      <option value=@tenant>@tenant</option>
-
-}
-
-</select>
-</p>
-
-@functions {  //use @code in razor components.
-   
+            
 
     void SetTenant(ChangeEventArgs e)
     {
@@ -31,7 +40,6 @@
         Tenants.SetTenant(SelectedString);
     }
 }
-
 Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
